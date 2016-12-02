@@ -1,14 +1,20 @@
 CC = $(CXX)
-CXXFLAGS += -g
+CXXFLAGS += -O3 -std=c++11
+CXXFLAGS += -Itclap/include
+LDFLAGS += -std=c++11
 
 .PHONY: all clean
 
 all: sound-of-sorting
 
-main.o: sorts.hpp sorts/*
-
 sound-of-sorting: main.o
-	$(CXX) -o $@ $<
+	$(CXX) $(LDFLAGS) -o $@ $<
+
+main.o: main.cpp sorts.hpp sorts/* tclap/include/tclap
 
 clean:
 	$(RM) main.o sound-of-sorting
+	$(RM) -r tclap
+
+tclap/include/tclap:
+	git clone https://github.com/mirror/tclap.git
