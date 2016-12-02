@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+sound-of-sorting
+
+# Results
+run
