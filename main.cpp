@@ -2,6 +2,8 @@
 #include <string>
 #include <random>
 #include <cmath>
+#include <cstdint>
+#include <limits>
 
 #include <tclap/CmdLine.h>
 
@@ -9,10 +11,12 @@
 
 using namespace TCLAP;
 
+typedef int16_t sample_t;
+
 int main(int argc, const char *argv[]) {
     // fixed parameters
     const size_t N = 25;
-    std::vector<double> v(N);
+    std::vector<sample_t> v(N);
 
     // parse command line arguments
     std::string waveform;
@@ -34,15 +38,17 @@ int main(int argc, const char *argv[]) {
         std::cerr << e.what() << std::endl;
     }
 
+    // generate input data
+    const sample_t max_val = std::numeric_limits<sample_t>::max();
     if (waveform == "white-noise") {
         std::mt19937 rng(std::random_device{}());
-        std::uniform_real_distribution<double> uniform;
-        for (double& x : v) {
+        std::uniform_int_distribution<sample_t> uniform(-max_val, max_val);
+        for (sample_t& x : v) {
             x = uniform(rng);
         }
     } else if (waveform == "sine") {
         for (size_t i = 0; i < N; ++i) {
-            v[i] = sin(2 * M_PI * i / N);
+            v[i] = sample_t(max_val * sin(2 * M_PI * i / N));
         }
     }
 
