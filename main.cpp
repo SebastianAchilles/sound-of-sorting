@@ -6,6 +6,7 @@
 #include <limits>
 
 #include <tclap/CmdLine.h>
+#include <SDL2/SDL.h>
 
 #include "sorts.hpp"
 
@@ -13,9 +14,15 @@ using namespace TCLAP;
 
 typedef int16_t sample_t;
 
+static uint8_t *audio_pos;
+static size_t audio_len;
+
+void audio_callback(void *, uint8_t *, int);
+
 int main(int argc, const char *argv[]) {
     // fixed parameters
-    const size_t N = 25;
+    const size_t N = 100;
+    const uint32_t sample_rate = 44100;
     std::vector<sample_t> v(N);
 
     // parse command line arguments
@@ -52,11 +59,54 @@ int main(int argc, const char *argv[]) {
         }
     }
 
-    bubble_sort(v, [&v]() {
-            for (const double& x : v) {
-                std::cout << x << std::endl;
-            }
+    // sort the array; keep snapshots
+    std::vector<sample_t> acc;
+    bubble_sort(v, [&acc,&v]() {
+            acc.insert(acc.end(), v.begin(), v.end());
         });
 
+    // play the sound
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+        return 1;
+
+    static SDL_AudioSpec wav_spec;
+    wav_spec.freq = sample_rate;
+    wav_spec.format = AUDIO_S16;
+    wav_spec.channels = 1;
+    wav_spec.samples = 4096;
+    wav_spec.silence = 0;
+    wav_spec.padding = 0;
+    wav_spec.size = 0;
+    wav_spec.callback = audio_callback;
+    wav_spec.userdata = NULL;
+
+    audio_pos = (uint8_t *)acc.data();
+    audio_len = acc.size() * sizeof(sample_t);
+
+    if (SDL_OpenAudio(&wav_spec, NULL) < 0) {
+        std::cerr << "Couldn't open audio: " << SDL_GetError() << std::endl;
+        return -1;
+    }
+    SDL_PauseAudio(0);
+
+    // wait until we're done playing
+    while (audio_len > 0) {
+        SDL_Delay(100);
+    }
+
+    SDL_CloseAudio();
+
     return 0;
+}
+
+void audio_callback(void *userdata, uint8_t *stream, int len) {
+    if (audio_len ==0)
+        return;
+
+    len = (len > audio_len ? audio_len : len);
+    SDL_memset(stream, 0, len);
+    SDL_MixAudioFormat(stream, audio_pos, AUDIO_S16, len, SDL_MIX_MAXVOLUME);
+
+    audio_pos += len;
+    audio_len -= len;
 }

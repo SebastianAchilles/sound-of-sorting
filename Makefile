@@ -1,14 +1,15 @@
 CC = $(CXX)
 CXXFLAGS += -O3 -std=c++11
 CXXFLAGS += -Itclap/include
-LDFLAGS += -std=c++11
+CXXFLAGS += $(shell sdl2-config --cflags)
+LDFLAGS += $(shell sdl2-config --libs)
 
 .PHONY: all clean
 
 all: sound-of-sorting
 
 sound-of-sorting: main.o
-	$(CXX) $(LDFLAGS) -o $@ $<
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
 main.o: main.cpp sorts.hpp sorts/* tclap/include/tclap
 
