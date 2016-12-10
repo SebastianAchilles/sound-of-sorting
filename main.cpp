@@ -1,5 +1,4 @@
 #include <iostream>
-#include <functional>
 #include <vector>
 #include <string>
 #include <random>
@@ -86,7 +85,7 @@ int main(int argc, const char *argv[]) {
 
     // swap handler
     std::vector<sample_t> wav;
-    std::function<void(sample_t, sample_t)> swap_handler;
+    callback_type<decltype(wav)> swap_handler;
     if (waveform_mode) {
         swap_handler = [&wav,&v](sample_t a, sample_t b) {
             wav.insert(wav.end(), v.begin(), v.end());
@@ -104,7 +103,8 @@ int main(int argc, const char *argv[]) {
     }
 
     // sort the array
-    BubbleSort::sort(v, swap_handler);
+    sort_algorithm_type<decltype(wav)> sort = BubbleSort::sort<decltype(wav)>;
+    sort(v, swap_handler);
 
     // play the sound
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
