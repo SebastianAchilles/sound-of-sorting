@@ -1,6 +1,5 @@
 template <typename T, typename C>
 void bubble_sort(T& v, C callback) {
-    callback();
     typename T::iterator it1, it2, it_end;
     if (v.size() <= 1)
         return;
@@ -9,7 +8,7 @@ void bubble_sort(T& v, C callback) {
             if (*it1 > *it2) {
                 std::swap(*it1, *it2);
             }
-            callback();
+            callback(it1, it2);
         }
     }
 }
