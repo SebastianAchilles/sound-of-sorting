@@ -28,6 +28,7 @@
 *.out
 *.app
 sound-of-sorting
+test
 
 # Results
 run
