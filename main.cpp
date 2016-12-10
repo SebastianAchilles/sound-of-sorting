@@ -26,10 +26,13 @@ int main(int argc, const char *argv[]) {
     const uint32_t sample_rate = 44100;
     const sample_t amplitude = std::numeric_limits<sample_t>::max();
     std::vector<sample_t> v(N);
+    std::vector<sample_t> wav;
+    auto algorithm_map = algorithms<decltype(wav)>();
 
     // parse command line arguments
     std::string input;
     bool waveform_mode;
+    sort_algorithm_type<decltype(wav)> sort;
     try {
         CmdLine cmd("Apply sorting algorithms to a waveform and listen to it "
                     "as it sorts", ' ', "0.1");
@@ -39,7 +42,7 @@ int main(int argc, const char *argv[]) {
         inputs.push_back("falling-edge");
         ValuesConstraint<std::string> allowed_inputs(inputs);
         ValueArg<std::string> input_arg("i", "input",
-                                        "Input data to be sorted", false,
+                                        "Input data to be sorted.", false,
                                         "random", &allowed_inputs);
         cmd.add(input_arg);
 
@@ -52,9 +55,20 @@ int main(int argc, const char *argv[]) {
                                        "swap-pitch", &allowed_modes);
         cmd.add(mode_arg);
 
+        std::vector<std::string> sort_names;
+        for (auto& it : algorithm_map) {
+            sort_names.push_back(it.first);
+        }
+        ValuesConstraint<std::string> allowed_sorts(sort_names);
+        ValueArg<std::string> sort_arg("s", "sort",
+                                       "Choose sorting algorithm.", true,
+                                       "", &allowed_sorts);
+        cmd.add(sort_arg);
+
         cmd.parse(argc, argv);
         input = input_arg.getValue();
         waveform_mode = (mode_arg.getValue() == "waveform");
+        sort = algorithm_map[sort_arg.getValue()];
     } catch (ArgException& e) {
         std::cerr << e.what() << std::endl;
     }
@@ -84,7 +98,6 @@ int main(int argc, const char *argv[]) {
     }
 
     // swap handler
-    std::vector<sample_t> wav;
     callback_type<decltype(wav)> swap_handler;
     if (waveform_mode) {
         swap_handler = [&wav,&v](sample_t a, sample_t b) {
@@ -103,7 +116,6 @@ int main(int argc, const char *argv[]) {
     }
 
     // sort the array
-    sort_algorithm_type<decltype(wav)> sort = BubbleSort::sort<decltype(wav)>;
     sort(v, swap_handler);
 
     // play the sound

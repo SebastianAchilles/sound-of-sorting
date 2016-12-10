@@ -4,8 +4,7 @@
 namespace BubbleSort {
 
     template <typename T>
-    void sort(T& v, callback_type<T> callback)
-    {
+    void sort(T& v, callback_type<T> callback) {
         typename T::iterator it1, it2, it_end;
         if (v.size() <= 1)
             return;
