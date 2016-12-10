@@ -24,7 +24,7 @@ int main () {
     for (auto& p : map) {
         std::vector<int> w = v;
         std::cout << "Testing " << p.first << " sort...\t" << std::flush;
-        (p.second)(w, dummy);
+        (p.second)(w.begin(), w.end(), dummy);
         if (w == sorted) {
             std::cout << "ok." << std::endl;
         } else {

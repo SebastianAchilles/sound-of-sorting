@@ -116,7 +116,7 @@ int main(int argc, const char *argv[]) {
     }
 
     // sort the array
-    sort(v, swap_handler);
+    sort(v.begin(), v.end(), swap_handler);
 
     // play the sound
     if (SDL_Init(SDL_INIT_AUDIO) < 0)

@@ -7,9 +7,9 @@ namespace QuickSort {
     namespace detail {
 
         template <typename T>
-        typename T::iterator partition(T& v, callback_type<T> callback,
-                                       typename T::iterator itl,
-                                       typename T::iterator itr)
+        typename T::iterator partition(typename T::iterator itl,
+                                       typename T::iterator itr,
+                                       callback_type<T> callback)
         {
             --itr; // pivot element
             typename T::iterator i = itl;
@@ -25,22 +25,17 @@ namespace QuickSort {
             return i;
         }
 
-        template <typename T>
-        void quicksort(T& v, callback_type<T> callback,
-                       typename T::iterator itl, typename T::iterator itr)
-        {
-            if (itl < std::prev(itr)) {
-                typename T::iterator p = partition(v, callback, itl, itr);
-                quicksort(v, callback, itl, p);
-                quicksort(v, callback, std::next(p), itr);
-            }
-        }
-
     }
 
     template <typename T>
-    void sort(T& v, callback_type<T> callback) {
-        detail::quicksort(v, callback, v.begin(), v.end());
+    void sort(typename T::iterator itl, typename T::iterator itr,
+              callback_type<T> callback)
+    {
+        if (itl < std::prev(itr)) {
+            typename T::iterator p = detail::partition<T>(itl, itr, callback);
+            sort<T>(itl, p, callback);
+            sort<T>(std::next(p), itr, callback);
+        }
     }
 
 }
