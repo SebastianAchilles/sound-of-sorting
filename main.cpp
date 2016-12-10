@@ -1,5 +1,6 @@
 #include <iostream>
 #include <functional>
+#include <vector>
 #include <string>
 #include <random>
 #include <cmath>
@@ -85,18 +86,17 @@ int main(int argc, const char *argv[]) {
 
     // swap handler
     std::vector<sample_t> wav;
-    typedef std::vector<sample_t>::const_iterator it_t;
-    std::function<void(it_t, it_t)> swap_handler;
+    std::function<void(sample_t, sample_t)> swap_handler;
     if (waveform_mode) {
-        swap_handler = [&wav,&v](it_t it1, it_t it2) {
+        swap_handler = [&wav,&v](sample_t a, sample_t b) {
             wav.insert(wav.end(), v.begin(), v.end());
         };
     } else {
-        swap_handler = [&wav](it_t it1, it_t it2) {
+        swap_handler = [&wav](sample_t a, sample_t b) {
             const size_t l = 50000 / N;
             for (size_t i = 0; i < l; ++i) {
-                double val = (sin(2 * M_PI * (*it1) * i / sample_rate)
-                              + sin(2 * M_PI * (*it2) * i / sample_rate));
+                double val = (sin(2 * M_PI * a * i / sample_rate)
+                              + sin(2 * M_PI * b * i / sample_rate));
                 val *= .5 * amplitude;
                 wav.push_back(sample_t(val));
             }
@@ -104,7 +104,7 @@ int main(int argc, const char *argv[]) {
     }
 
     // sort the array
-    bubble_sort(v, swap_handler);
+    BubbleSort::sort(v, swap_handler);
 
     // play the sound
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
