@@ -22,7 +22,7 @@ void audio_callback(void *, uint8_t *, int);
 
 int main(int argc, const char *argv[]) {
     // fixed parameters
-    const size_t N = 50;
+    const size_t N = 100;
     const uint32_t sample_rate = 44100;
     const sample_t amplitude = std::numeric_limits<sample_t>::max();
     std::vector<sample_t> v(N);
@@ -76,7 +76,7 @@ int main(int argc, const char *argv[]) {
     // generate input data
     const sample_t max_val = (waveform_mode
                               ? amplitude /* max. amplitude */
-                              : 10000 /* max. frequency in Hz */);
+                              : 4000 /* max. frequency in Hz */);
     const sample_t min_val = (waveform_mode
                               ? -amplitude
                               : 50 /* min. frequency in Hz */);
@@ -105,7 +105,7 @@ int main(int argc, const char *argv[]) {
         };
     } else {
         swap_handler = [&wav](sample_t a, sample_t b) {
-            const size_t l = 50000 / N;
+            const size_t l = 1000;
             for (size_t i = 0; i < l; ++i) {
                 double val = (sin(2 * M_PI * a * i / sample_rate)
                               + sin(2 * M_PI * b * i / sample_rate));
