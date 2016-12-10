@@ -2,7 +2,7 @@ CC = $(CXX)
 CXXFLAGS += -O3 -std=c++11
 CXXFLAGS += -Itclap/include
 CXXFLAGS += $(shell sdl2-config --cflags)
-LDFLAGS += $(shell sdl2-config --libs)
+LDFLAGS += -l:libSDL2.a -lpthread -ldl
 
 .PHONY: all clean
 
