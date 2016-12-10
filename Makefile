@@ -6,15 +6,19 @@ LDFLAGS += $(shell sdl2-config --libs)
 
 .PHONY: all clean
 
-all: sound-of-sorting
-
 sound-of-sorting: main.o
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
+all: sound-of-sorting test
+
 main.o: main.cpp sorts.hpp sorts/* tclap/include/tclap
 
+test: test.o
+
+test.o: test.cpp sorts.hpp sorts/*
+
 clean:
-	$(RM) main.o sound-of-sorting
+	$(RM) main.o sound-of-sorting test.o test
 	$(RM) -r tclap
 
 tclap/include/tclap:
