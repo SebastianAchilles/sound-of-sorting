@@ -15,6 +15,7 @@ using sort_algorithm_type = std::function<void(typename T::iterator,
 #include "sorts/bubble_sort.hpp"
 #include "sorts/quick_sort.hpp"
 #include "sorts/insertion_sort.hpp"
+#include "sorts/selection_sort.hpp"
 /* include more sort algorithms here! */
 
 template <typename T>
@@ -23,6 +24,7 @@ std::map<std::string, sort_algorithm_type<T> > algorithms() {
         {"bubble", BubbleSort::sort<T>},
         {"quick", QuickSort::sort<T>},
         {"insertion", InsertionSort::sort<T>},
+        {"selection", SelectionSort::sort<T>},
         /* include more sort algorithms here! */
     };
 }
