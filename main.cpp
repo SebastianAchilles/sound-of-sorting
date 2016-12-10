@@ -99,19 +99,23 @@ int main(int argc, const char *argv[]) {
 
     // swap handler
     callback_type<decltype(wav)> swap_handler;
+    double phi_1 = 0, phi_2 = 0;
     if (waveform_mode) {
         swap_handler = [&wav,&v](sample_t a, sample_t b) {
             wav.insert(wav.end(), v.begin(), v.end());
         };
     } else {
-        swap_handler = [&wav](sample_t a, sample_t b) {
+        swap_handler = [&wav,&phi_1,&phi_2](sample_t a, sample_t b) {
             const size_t l = 1000;
             for (size_t i = 0; i < l; ++i) {
-                double val = (sin(2 * M_PI * a * i / sample_rate)
-                              + sin(2 * M_PI * b * i / sample_rate));
+                double p1 = phi_1 + 2 * M_PI * a * i / sample_rate;
+                double p2 = phi_2 + 2 * M_PI * b * i / sample_rate;
+                double val = sin(p1) + sin(p2);
                 val *= .5 * amplitude;
                 wav.push_back(sample_t(val));
             }
+            phi_1 += 2 * M_PI * a * l / sample_rate;
+            phi_2 += 2 * M_PI * b * l / sample_rate;
         };
     }
 
