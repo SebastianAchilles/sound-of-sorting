@@ -3,7 +3,7 @@
 The Sound of Sorting is an "audibilization" of common sorting algorithms. The
 idea is that you can listen to the sorting algorithm as it works its magic.
 
-## WARNING
+### WARNING
 
 Before running the program, **turn down the system volume to the lowest
 non-zero setting**! `sound-of-sorting` outputs at maximum amplitude. Not
@@ -54,3 +54,28 @@ can install SDL2 static libs by running
    For the present implementation of quick sort, this is the worst case.
  * `-h`, `--help` Print a help message to remind you of these options.
  * `No arguments at all`: You'll have to find out.
+
+## Contribute more sorting algorithms
+
+You are welcome to add further sorting algorithms! The program is designed to
+add sorting algorithms in a modular way. Use one of the existing algorithms as
+a template (preferrably one of the simple ones like `sorts/insertion_sort.hpp`).
+Each algorithm defines its own namespace through which it exposes its `sort`
+function. Two iterators marking the begin and end of the sequence to be sorted
+are passed in. No access to the container itself should be needed. The
+container's type is used as the template parameter though; the iterator type
+`T::iterator` or value type `T::value_type` may be derived from it as necessary.
+
+New sorting algorithms need to be `#include`'d and added to a `std::map` in the
+header `sort.hpp`. The two positions are marked with comments. No modification
+of any other sources should be required.
+
+Feel free to fork this repository and submit a pull request.
+
+### Testing new sorting algorithms
+
+To ensure the algorithm works properly, after adding to `sorts.hpp`, you should
+compile the test program using `make test` and run it (`./test`). It'll attempt
+to sort a random sequence of integers with each of the sorting algorithms and
+compare the results with that from using `std::sort`. It's also useful for
+debugging.
