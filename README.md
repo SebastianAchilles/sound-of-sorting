@@ -1,2 +1,56 @@
 # The Sound of Sorting
-Apply sorting algorithms to a waveform and listen to it as it sorts
+
+The Sound of Sorting is an "audibilization" of common sorting algorithms. The
+idea is that you can listen to the sorting algorithm as it works its magic.
+
+## WARNING
+
+Before running the program, **turn down the system volume to the lowest
+non-zero setting**! `sound-of-sorting` outputs at maximum amplitude. Not
+complying may not only annoy your neighbors but also damage your speakers!
+This is especially true when using the `--mode waveform`.
+
+## System requirements
+
+The program should run on any Linux system. To play sounds, it uses the SDL2
+library but that is linked statically, so you'll only need to install it if you
+intend to compile from source; but not to run the executable. On Fedora, you
+can install SDL2 static libs by running
+
+    sudo dnf install SDL2-static
+    
+## Usage
+
+**SYNOPSIS**
+
+    ./sound-of-sorting  [-N <#samples>]
+                        -s <bubble|insertion|merge|quick|selection|...>
+                        [-m <swap-pitch|waveform>]
+                        [-i <random|sine|falling-edge>]
+                        [--] [--version] [-h]
+
+**DESCRIPTION**
+
+ * `-N`, `--number <#samples>` Number of samples to sort. This
+   defaults to 50. For efficient algorithms (quick or merge sort) you may want
+   to up this.
+ * `-s`, `--sort <bubble|insertion|...>` The sorting algorithm that is used.
+   This argument is non-optional. Or is it?
+ * `-m`, `--mode <swap-pitch|waveform>` Choose the scheme to be used for the
+   audibilization. In `swap-pitch` mode, each time two elements are swapped
+   (or each time they are compared, depending on the algorithm), a superposition
+   of two beeps is played whose frequency (pitch) corresponds to the value or
+   elements being swapped (compared). In `waveform` mode, the current state of
+   the complete (partially) sorted array will be used as a waveform that is
+   repeatedly looped while its altered by the algorithm. At the end when the
+   array is (almost) sorted, it will resemble a sawtooth wave. _Turn down your
+   volume before trying this mode!_
+ * `-i`, `--input <random|sine|falling-edge>` Specify the input array that the
+   sorting algorithm is to be applied to. `random` initializes the array with
+   random values (different each time.) `sine` starts out from a sinsodial wave.
+   This is especially fun when used in `waveform` mode as the pure tone will be
+   transformed to a sawtooth wave. `falling-edge` starts out from a sawtooth
+   wave with a falling-edge, i.e. the elements are sorted in decreasing order.
+   For the present implementation of quick sort, this is the worst case.
+ * `-h`, `--help` Print a help message to remind you of these options.
+ * `No arguments at all`: You'll have to find out.
