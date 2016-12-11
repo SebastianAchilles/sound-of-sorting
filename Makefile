@@ -6,12 +6,14 @@ LDFLAGS += -l:libSDL2.a -lpthread -ldl
 
 .PHONY: all clean
 
-sound-of-sorting: main.o
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+sound-of-sorting: main.o song.o playback.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 all: sound-of-sorting test
 
-main.o: main.cpp sorts.hpp sorts/* tclap/include/tclap
+main.o: main.cpp sorts.hpp playback.hpp sorts/* tclap/include/tclap
+
+playback.o: playback.cpp playback.hpp
 
 test: test.o
 

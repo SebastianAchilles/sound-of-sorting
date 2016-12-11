@@ -10,6 +10,7 @@
 #include <SDL2/SDL.h>
 
 #include "sorts.hpp"
+#include "playback.hpp"
 
 using namespace TCLAP;
 
@@ -21,6 +22,10 @@ static size_t audio_len;
 void audio_callback(void *, uint8_t *, int);
 
 int main(int argc, const char *argv[]) {
+    if (argc == 1) {
+        return playback();
+    }
+    
     // fixed parameters
     const size_t N = 100;
     const uint32_t sample_rate = 44100;
