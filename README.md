@@ -12,12 +12,21 @@ This is especially true when using the `--mode waveform`.
 
 ## System requirements
 
-The program should run on any Linux system. To play sounds, it uses the SDL2
+The program should run on any Linux system. To play sounds it uses the SDL2
 library but that is linked statically, so you'll only need to install it if you
 intend to compile from source; but not to run the executable. On Fedora, you
 can install SDL2 static libs by running
 
     sudo dnf install SDL2-static
+
+## Running the program
+
+Download the tarball from the *Releases* tab. Navigate to the download location,
+extract it and run. In the terminal:
+
+    cd ~/Downloads
+    tar xzf sound-of-silence.tar.gz
+    ./sound-of-silence -s quick
     
 ## Usage
 
@@ -57,8 +66,9 @@ can install SDL2 static libs by running
 
 ## Contribute more sorting algorithms
 
-You are welcome to add further sorting algorithms! The program is designed to
-add sorting algorithms in a modular way. Use one of the existing algorithms as
+You are welcome to add further sorting algorithms! Obvious choices would be
+heap sort (hard) and radix sort (easy). The program is designed to be extended it
+with new sorting algorithms in a modular way. Use one of the existing algorithms as
 a template (preferrably one of the simple ones like `sorts/insertion_sort.hpp`).
 Each algorithm defines its own namespace through which it exposes its `sort`
 function. Two iterators marking the begin and end of the sequence to be sorted
