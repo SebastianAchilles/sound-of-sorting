@@ -76,6 +76,14 @@ are passed in. No access to the container itself should be needed. The
 container's type is used as the template parameter though; the iterator type
 `T::iterator` or value type `T::value_type` may be derived from it as necessary.
 
+Additional, `sort` is passed a callback function of type `callback_type<T>`.
+This callback is what triggers the production of actual sounds.
+Call it whenever you operate on two elements of the array in a
+characteristic way. Ususally, this would be when you either swap two elements or
+when you compare two element. As a rule of thumb, the number of `callback` calls
+should scale according to the complexity of the sorting algorithm. Pass `callback`
+the two _values_ (not the iterators) of the elements being operated on.
+
 New sorting algorithms need to be `#include`'d and added to a `std::map` in the
 header `sort.hpp`. The two positions are marked with comments. No modification
 of any other sources should be required.
